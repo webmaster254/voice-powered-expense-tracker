@@ -1,30 +1,33 @@
 import {List as MUIList, Avatar,IconButton, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, Slide } from '@material-ui/core';
 import { Delete, MoneyOff } from '@material-ui/icons';
-import React from 'react';
+import React,{useContext} from 'react';
+import { ExpenseTrackerContext } from '../../../context/context';
 import useStyles from './styles';
 
 const List =()=> {
-
     const classes= useStyles();
+    const {transactions,deleteTransaction} = useContext(ExpenseTrackerContext);
   return (
     <MUIList dense={false} className={classes.list}>
-        <Slide direction="down" in>
+        {transactions.map((transaction)=>(
+        <Slide direction="down" in mountOnEnter unmountOnExit key={transaction.id}>
             <ListItem>
                 <ListItemAvatar>
-                    <Avatar >
+                    <Avatar className={transaction.type==='Income'?classes.avatarIncome:classes.avatarExpense} >
                         <MoneyOff/>
                     </Avatar>
                 </ListItemAvatar>
-                <ListItemText />
+                <ListItemText primary={transaction.category} secondary={`$${transaction.amount}-${transaction.date}`} />
                 <ListItemSecondaryAction>
-                    <IconButton edge="end" aria-label='delete'>
+                    <IconButton edge="end" aria-label='delete' onClick={()=> deleteTransaction(transaction.id)}>
                         <Delete/>
                     </IconButton>
                 </ListItemSecondaryAction>
             </ListItem>
         </Slide>
+        ))}
     </MUIList>
-  )
-}
+  );
+};
 
 export default List
