@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, Divider, Typography } from '@material-ui/core'
-import React from 'react'
+import React from 'react';
+import Form from './Form/Form';
 import useStyles from './styles';
 
 const ExpenseTracker=()=> {
@@ -13,6 +14,7 @@ const ExpenseTracker=()=> {
               .....
             </Typography>
             <Divider className={classes.divider}/>
+            <Form/>
         </CardContent>
     </Card>
   )
