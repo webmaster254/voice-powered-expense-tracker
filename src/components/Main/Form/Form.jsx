@@ -1,8 +1,11 @@
 import { Button, FormControl, Grid, InputLabel, Select,MenuItem, TextField, Typography } from '@material-ui/core'
 import React,{useContext,useState,useEffect} from 'react';
+import {v4 as uuidv4} from 'uuid';
+
 import { ExpenseTrackerContext } from '../../../context/context';
 import { incomeCategories,expenseCategories } from '../../../constants/categories';
 import formatDate from '../../../utils/formatDate';
+
 import useStyles from './styles';
 
 
@@ -19,6 +22,7 @@ const NewTransactionForm=()=> {
     const classes= useStyles();
     const {addTransaction} = useContext(ExpenseTrackerContext);
     const [formData,setFormData] = useState(initialState);
+    const [open,setOpen] = useState(false);
     
 
     const createTransaction = ()=> {
@@ -30,11 +34,15 @@ const NewTransactionForm=()=> {
         } else if(expenseCategories.map((iC)=>iC.type).includes(formData.category)){
             setFormData({...formData,type:'Expense'});
         }
+
+        setOpen(true);
+        addTransaction({...formData,amount:Number(formData.amount),id:uuidv4()});
+        setFormData(initialState);
     };
 
     
 
-
+    
 
     const selectedCategories = formData.type === "Income" ? incomeCategories: expenseCategories;
   return (
@@ -66,11 +74,11 @@ const NewTransactionForm=()=> {
             <TextField fullwidth type="number" label='Amount' value={formData.amount} onChange={(e)=>setFormData({...formData,amount:e.target.value})} />
         </Grid>
         <Grid item xs={6} >
-            <TextField fullWidth type="date" label='Date' value={formData.date} onchange={(e)=> setFormData({...formData,date:formatDate(e.target.value)})} />
+            <TextField fullWidth type="date" label='Date' value={formData.date} onChange={(e)=> setFormData({...formData,date:formatDate(e.target.value)})} />
         </Grid>
-      <Button className={classes.button} variant='outlined' color='primary' onClick={createTransaction} fullwidth>Create</Button>
+      <Button className={classes.button} variant='outlined' color='primary' onClick={createTransaction} fullWidth>Create</Button>
     </Grid>
   )
 }
 
-export default NewTransactionForm
+export default NewTransactionForm;
